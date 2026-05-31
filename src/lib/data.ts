@@ -1,0 +1,195 @@
+import modelS from "@/assets/model-s.jpg";
+import model3 from "@/assets/model-3.jpg";
+import modelX from "@/assets/model-x.jpg";
+import modelY from "@/assets/model-y.jpg";
+import cybertruck from "@/assets/cybertruck.jpg";
+
+export type Vehicle = {
+  slug: string;
+  name: string;
+  tagline: string;
+  basePrice: number;
+  range: string;
+  acceleration: string;
+  topSpeed: string;
+  image: string;
+  colors: { name: string; hex: string; price: number }[];
+  wheels: { name: string; price: number }[];
+  interiors: { name: string; price: number }[];
+};
+
+export const vehicles: Vehicle[] = [
+  {
+    slug: "model-s",
+    name: "Model S",
+    tagline: "Plaid performance, redefined.",
+    basePrice: 79990,
+    range: "405 mi",
+    acceleration: "1.99 s 0–60",
+    topSpeed: "200 mph",
+    image: modelS,
+    colors: [
+      { name: "Pearl White", hex: "#F4F4F4", price: 0 },
+      { name: "Solid Black", hex: "#0A0A0A", price: 1500 },
+      { name: "Midnight Silver", hex: "#5A5E62", price: 1500 },
+      { name: "Deep Blue", hex: "#1A2C56", price: 1500 },
+      { name: "Ultra Red", hex: "#9B1C1C", price: 2500 },
+    ],
+    wheels: [
+      { name: '19" Tempest', price: 0 },
+      { name: '21" Arachnid', price: 4500 },
+    ],
+    interiors: [
+      { name: "All Black", price: 0 },
+      { name: "Black & White", price: 2000 },
+      { name: "Cream Premium", price: 2000 },
+    ],
+  },
+  {
+    slug: "model-3",
+    name: "Model 3",
+    tagline: "Electric, simplified.",
+    basePrice: 38990,
+    range: "341 mi",
+    acceleration: "2.9 s 0–60",
+    topSpeed: "162 mph",
+    image: model3,
+    colors: [
+      { name: "Pearl White", hex: "#F4F4F4", price: 0 },
+      { name: "Solid Black", hex: "#0A0A0A", price: 1000 },
+      { name: "Stealth Grey", hex: "#3A3D40", price: 1000 },
+      { name: "Deep Blue", hex: "#1A2C56", price: 1000 },
+      { name: "Ultra Red", hex: "#9B1C1C", price: 2000 },
+    ],
+    wheels: [
+      { name: '18" Photon', price: 0 },
+      { name: '19" Nova', price: 1500 },
+    ],
+    interiors: [
+      { name: "All Black", price: 0 },
+      { name: "Black & White", price: 1000 },
+    ],
+  },
+  {
+    slug: "model-x",
+    name: "Model X",
+    tagline: "Falcon wings. Apex utility.",
+    basePrice: 84990,
+    range: "348 mi",
+    acceleration: "2.5 s 0–60",
+    topSpeed: "163 mph",
+    image: modelX,
+    colors: [
+      { name: "Pearl White", hex: "#F4F4F4", price: 0 },
+      { name: "Solid Black", hex: "#0A0A0A", price: 1500 },
+      { name: "Midnight Silver", hex: "#5A5E62", price: 1500 },
+      { name: "Deep Blue", hex: "#1A2C56", price: 1500 },
+    ],
+    wheels: [
+      { name: '20" Cyberstream', price: 0 },
+      { name: '22" Turbine', price: 5500 },
+    ],
+    interiors: [
+      { name: "All Black", price: 0 },
+      { name: "Black & White", price: 2000 },
+      { name: "Cream Premium", price: 2000 },
+    ],
+  },
+  {
+    slug: "model-y",
+    name: "Model Y",
+    tagline: "Built for everywhere.",
+    basePrice: 44990,
+    range: "330 mi",
+    acceleration: "3.5 s 0–60",
+    topSpeed: "155 mph",
+    image: modelY,
+    colors: [
+      { name: "Pearl White", hex: "#F4F4F4", price: 0 },
+      { name: "Solid Black", hex: "#0A0A0A", price: 1000 },
+      { name: "Stealth Grey", hex: "#3A3D40", price: 1000 },
+      { name: "Deep Blue", hex: "#1A2C56", price: 1000 },
+    ],
+    wheels: [
+      { name: '19" Gemini', price: 0 },
+      { name: '20" Induction', price: 2000 },
+    ],
+    interiors: [
+      { name: "All Black", price: 0 },
+      { name: "Black & White", price: 1000 },
+    ],
+  },
+  {
+    slug: "cybertruck",
+    name: "Cybertruck",
+    tagline: "Built for any planet.",
+    basePrice: 79990,
+    range: "340 mi",
+    acceleration: "2.6 s 0–60",
+    topSpeed: "130 mph",
+    image: cybertruck,
+    colors: [
+      { name: "Stainless", hex: "#C7CBD1", price: 0 },
+      { name: "Wrap Black", hex: "#0A0A0A", price: 6500 },
+    ],
+    wheels: [
+      { name: '20" All-Terrain', price: 0 },
+      { name: '20" Cyber', price: 3500 },
+    ],
+    interiors: [
+      { name: "All Black", price: 0 },
+      { name: "Cream Premium", price: 1500 },
+    ],
+  },
+];
+
+export const getVehicle = (slug: string) => vehicles.find((v) => v.slug === slug);
+
+export type InvestmentPlan = {
+  name: string;
+  minimum: number;
+  roi: string;
+  term: string;
+  features: string[];
+};
+
+export type Entity = {
+  slug: string;
+  name: string;
+  initials: string;
+  sector: string;
+  mission: string;
+  founded: number;
+  accent: string;
+  plans: InvestmentPlan[];
+};
+
+const defaultPlans = (mins: [number, number, number, number]): InvestmentPlan[] => [
+  { name: "Starter", minimum: mins[0], roi: "12% annual", term: "12 months", features: ["Quarterly dividends", "Investor newsletter", "Liquidation after term"] },
+  { name: "Growth", minimum: mins[1], roi: "21% annual", term: "24 months", features: ["Monthly dividends", "Direct investor portal", "Early product access"] },
+  { name: "Premium", minimum: mins[2], roi: "34% annual", term: "36 months", features: ["Weekly dividends", "Founder roundtable invite", "Equity conversion option"] },
+  { name: "Institutional", minimum: mins[3], roi: "Custom", term: "48+ months", features: ["Dedicated relationship lead", "Bespoke ROI terms", "Board observer rights"] },
+];
+
+export const entities: Entity[] = [
+  { slug: "tesla", name: "Tesla", initials: "T", sector: "Sustainable Energy & Mobility", mission: "Accelerate the world's transition to sustainable energy through electric vehicles, solar and storage.", founded: 2003, accent: "#E31937", plans: defaultPlans([500, 5000, 25000, 250000]) },
+  { slug: "spacex", name: "SpaceX", initials: "SX", sector: "Aerospace & Launch", mission: "Make humanity multi-planetary through fully and rapidly reusable rockets.", founded: 2002, accent: "#005288", plans: defaultPlans([1000, 10000, 50000, 500000]) },
+  { slug: "neuralink", name: "Neuralink", initials: "N", sector: "Neurotechnology", mission: "Create a generalized brain interface to restore autonomy and unlock human potential.", founded: 2016, accent: "#000000", plans: defaultPlans([2500, 15000, 75000, 750000]) },
+  { slug: "the-boring-company", name: "The Boring Company", initials: "TBC", sector: "Tunneling & Infrastructure", mission: "Solve traffic and enable rapid point-to-point transportation through tunnels.", founded: 2016, accent: "#2A2A2A", plans: defaultPlans([1000, 8000, 40000, 400000]) },
+  { slug: "xai", name: "xAI", initials: "xAI", sector: "Artificial Intelligence", mission: "Understand the true nature of the universe through maximally truth-seeking AI.", founded: 2023, accent: "#111111", plans: defaultPlans([2500, 20000, 100000, 1000000]) },
+  { slug: "starlink", name: "Starlink", initials: "SL", sector: "Global Satellite Internet", mission: "Deliver high-speed, low-latency broadband internet across the planet.", founded: 2019, accent: "#1A73E8", plans: defaultPlans([1000, 10000, 50000, 500000]) },
+  { slug: "x", name: "X", initials: "X", sector: "Digital Town Square", mission: "Build the everything app for global conversation, payments and commerce.", founded: 2023, accent: "#000000", plans: defaultPlans([500, 5000, 30000, 300000]) },
+  { slug: "solarcity", name: "SolarCity", initials: "SC", sector: "Residential Solar", mission: "Power every home with clean, affordable solar energy and storage.", founded: 2006, accent: "#F5A623", plans: defaultPlans([500, 4000, 20000, 200000]) },
+  { slug: "openai-legacy", name: "OpenAI Legacy Stake", initials: "OAI", sector: "AI Research (Founding Stake)", mission: "Founding-era stake portfolio in artificial general intelligence research.", founded: 2015, accent: "#10A37F", plans: defaultPlans([2500, 15000, 80000, 800000]) },
+  { slug: "zip2", name: "Zip2 Holdings", initials: "Z2", sector: "Original Internet Venture", mission: "Legacy holdings from Musk's first internet city-guide venture.", founded: 1995, accent: "#444444", plans: defaultPlans([250, 2500, 12500, 125000]) },
+  { slug: "paypal-mafia", name: "X.com / PayPal Legacy", initials: "PP", sector: "FinTech Legacy", mission: "Legacy stake from the founding of X.com, which became PayPal.", founded: 1999, accent: "#003087", plans: defaultPlans([500, 5000, 25000, 250000]) },
+  { slug: "hyperloop", name: "Hyperloop Initiative", initials: "HL", sector: "High-Speed Transit", mission: "Tube-based transport at near-airline speeds between major metros.", founded: 2013, accent: "#6C7A89", plans: defaultPlans([1000, 8000, 40000, 400000]) },
+];
+
+export const getEntity = (slug: string) => entities.find((e) => e.slug === slug);
+
+export const wallets = {
+  BTC: "bc1qzaxbyte9x7v4qktph3lrn8j5d2x6r0vzqya8k4",
+  ETH: "0x9F4B2c8A1d7e6F3a5B0C4D8e2F1a9B6c3D7e0F2a",
+  SOL: "ZaxByte7xK9pQ2mN4rV8sT6uH1jY3wD5fG0bC2eA9",
+};
