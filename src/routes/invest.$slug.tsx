@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 import { Check, Copy, Upload, ArrowLeft } from "lucide-react";
-import { getEntity, wallets } from "@/lib/data";
+import { getEntity, wallets, type InvestmentPlan } from "@/lib/data";
 
 export const Route = createFileRoute("/invest/$slug")({
   loader: ({ params }) => {
@@ -95,7 +95,7 @@ function CheckoutPage() {
       <section className="mx-auto max-w-[1400px] px-6 py-16 lg:px-12">
         <h2 className="text-3xl">Choose your plan.</h2>
         <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {entity.plans.map((p, i) => {
+          {entity.plans.map((p: InvestmentPlan, i: number) => {
             const selected = i === planIdx;
             return (
               <button
@@ -123,7 +123,7 @@ function CheckoutPage() {
                   </div>
                 </div>
                 <ul className="mt-5 space-y-1.5 text-xs">
-                  {p.features.map((f) => (
+                  {p.features.map((f: string) => (
                     <li key={f} className="flex gap-2">
                       <Check className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                       <span>{f}</span>
