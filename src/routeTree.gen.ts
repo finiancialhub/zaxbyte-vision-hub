@@ -9,38 +9,81 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VehiclesRouteImport } from './routes/vehicles'
+import { Route as InvestRouteImport } from './routes/invest'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as InvestSlugRouteImport } from './routes/invest.$slug'
 
+const VehiclesRoute = VehiclesRouteImport.update({
+  id: '/vehicles',
+  path: '/vehicles',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InvestRoute = InvestRouteImport.update({
+  id: '/invest',
+  path: '/invest',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InvestSlugRoute = InvestSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => InvestRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/invest': typeof InvestRouteWithChildren
+  '/vehicles': typeof VehiclesRoute
+  '/invest/$slug': typeof InvestSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/invest': typeof InvestRouteWithChildren
+  '/vehicles': typeof VehiclesRoute
+  '/invest/$slug': typeof InvestSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/invest': typeof InvestRouteWithChildren
+  '/vehicles': typeof VehiclesRoute
+  '/invest/$slug': typeof InvestSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/invest' | '/vehicles' | '/invest/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/invest' | '/vehicles' | '/invest/$slug'
+  id: '__root__' | '/' | '/invest' | '/vehicles' | '/invest/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  InvestRoute: typeof InvestRouteWithChildren
+  VehiclesRoute: typeof VehiclesRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vehicles': {
+      id: '/vehicles'
+      path: '/vehicles'
+      fullPath: '/vehicles'
+      preLoaderRoute: typeof VehiclesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/invest': {
+      id: '/invest'
+      path: '/invest'
+      fullPath: '/invest'
+      preLoaderRoute: typeof InvestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +91,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/invest/$slug': {
+      id: '/invest/$slug'
+      path: '/$slug'
+      fullPath: '/invest/$slug'
+      preLoaderRoute: typeof InvestSlugRouteImport
+      parentRoute: typeof InvestRoute
+    }
   }
 }
 
+interface InvestRouteChildren {
+  InvestSlugRoute: typeof InvestSlugRoute
+}
+
+const InvestRouteChildren: InvestRouteChildren = {
+  InvestSlugRoute: InvestSlugRoute,
+}
+
+const InvestRouteWithChildren =
+  InvestRoute._addFileChildren(InvestRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  InvestRoute: InvestRouteWithChildren,
+  VehiclesRoute: VehiclesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
