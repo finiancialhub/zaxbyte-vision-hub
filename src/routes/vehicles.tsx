@@ -42,10 +42,11 @@ function Configurator({ vehicle }: { vehicle: Vehicle }) {
     <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr]">
       <div className="relative rounded-2xl bg-secondary p-6 md:p-10">
         <img
-          src={vehicle.image}
-          alt={vehicle.name}
+          key={vehicle.colors[color].image}
+          src={vehicle.colors[color].image}
+          alt={`${vehicle.name} in ${vehicle.colors[color].name}`}
           loading="lazy"
-          className="mx-auto w-full max-w-2xl object-contain transition-transform duration-700 hover:scale-[1.02]"
+          className="mx-auto w-full max-w-2xl object-contain animate-fade-up transition-transform duration-700 hover:scale-[1.02]"
         />
         <div className="mt-8 grid grid-cols-3 gap-4 border-t border-border pt-6 text-center text-sm">
           <div>
