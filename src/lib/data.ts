@@ -1,8 +1,29 @@
-import modelS from "@/assets/model-s.jpg";
-import model3 from "@/assets/model-3.jpg";
-import modelX from "@/assets/model-x.jpg";
-import modelY from "@/assets/model-y.jpg";
-import cybertruck from "@/assets/cybertruck.jpg";
+import modelSWhite from "@/assets/model-s-pearl-white.jpg";
+import modelSBlack from "@/assets/model-s-solid-black.jpg";
+import modelSSilver from "@/assets/model-s-midnight-silver.jpg";
+import modelSBlue from "@/assets/model-s-deep-blue.jpg";
+import modelSRed from "@/assets/model-s-ultra-red.jpg";
+
+import model3White from "@/assets/model-3-pearl-white.jpg";
+import model3Black from "@/assets/model-3-solid-black.jpg";
+import model3Grey from "@/assets/model-3-stealth-grey.jpg";
+import model3Blue from "@/assets/model-3-deep-blue.jpg";
+import model3Red from "@/assets/model-3-ultra-red.jpg";
+
+import modelXWhite from "@/assets/model-x-pearl-white.jpg";
+import modelXBlack from "@/assets/model-x-solid-black.jpg";
+import modelXSilver from "@/assets/model-x-midnight-silver.jpg";
+import modelXBlue from "@/assets/model-x-deep-blue.jpg";
+
+import modelYWhite from "@/assets/model-y-pearl-white.jpg";
+import modelYBlack from "@/assets/model-y-solid-black.jpg";
+import modelYGrey from "@/assets/model-y-stealth-grey.jpg";
+import modelYBlue from "@/assets/model-y-deep-blue.jpg";
+
+import cybertruckStainless from "@/assets/cybertruck-stainless.jpg";
+import cybertruckBlack from "@/assets/cybertruck-wrap-black.jpg";
+
+export type VehicleColor = { name: string; hex: string; price: number; image: string };
 
 export type Vehicle = {
   slug: string;
@@ -13,7 +34,7 @@ export type Vehicle = {
   acceleration: string;
   topSpeed: string;
   image: string;
-  colors: { name: string; hex: string; price: number }[];
+  colors: VehicleColor[];
   wheels: { name: string; price: number }[];
   interiors: { name: string; price: number }[];
 };
@@ -27,13 +48,13 @@ export const vehicles: Vehicle[] = [
     range: "405 mi",
     acceleration: "1.99 s 0–60",
     topSpeed: "200 mph",
-    image: modelS,
+    image: modelSWhite,
     colors: [
-      { name: "Pearl White", hex: "#F4F4F4", price: 0 },
-      { name: "Solid Black", hex: "#0A0A0A", price: 1500 },
-      { name: "Midnight Silver", hex: "#5A5E62", price: 1500 },
-      { name: "Deep Blue", hex: "#1A2C56", price: 1500 },
-      { name: "Ultra Red", hex: "#9B1C1C", price: 2500 },
+      { name: "Pearl White", hex: "#F4F4F4", price: 0, image: modelSWhite },
+      { name: "Solid Black", hex: "#0A0A0A", price: 1500, image: modelSBlack },
+      { name: "Midnight Silver", hex: "#5A5E62", price: 1500, image: modelSSilver },
+      { name: "Deep Blue", hex: "#1A2C56", price: 1500, image: modelSBlue },
+      { name: "Ultra Red", hex: "#9B1C1C", price: 2500, image: modelSRed },
     ],
     wheels: [
       { name: '19" Tempest', price: 0 },
@@ -53,13 +74,13 @@ export const vehicles: Vehicle[] = [
     range: "341 mi",
     acceleration: "2.9 s 0–60",
     topSpeed: "162 mph",
-    image: model3,
+    image: model3White,
     colors: [
-      { name: "Pearl White", hex: "#F4F4F4", price: 0 },
-      { name: "Solid Black", hex: "#0A0A0A", price: 1000 },
-      { name: "Stealth Grey", hex: "#3A3D40", price: 1000 },
-      { name: "Deep Blue", hex: "#1A2C56", price: 1000 },
-      { name: "Ultra Red", hex: "#9B1C1C", price: 2000 },
+      { name: "Pearl White", hex: "#F4F4F4", price: 0, image: model3White },
+      { name: "Solid Black", hex: "#0A0A0A", price: 1000, image: model3Black },
+      { name: "Stealth Grey", hex: "#3A3D40", price: 1000, image: model3Grey },
+      { name: "Deep Blue", hex: "#1A2C56", price: 1000, image: model3Blue },
+      { name: "Ultra Red", hex: "#9B1C1C", price: 2000, image: model3Red },
     ],
     wheels: [
       { name: '18" Photon', price: 0 },
@@ -78,12 +99,12 @@ export const vehicles: Vehicle[] = [
     range: "348 mi",
     acceleration: "2.5 s 0–60",
     topSpeed: "163 mph",
-    image: modelX,
+    image: modelXWhite,
     colors: [
-      { name: "Pearl White", hex: "#F4F4F4", price: 0 },
-      { name: "Solid Black", hex: "#0A0A0A", price: 1500 },
-      { name: "Midnight Silver", hex: "#5A5E62", price: 1500 },
-      { name: "Deep Blue", hex: "#1A2C56", price: 1500 },
+      { name: "Pearl White", hex: "#F4F4F4", price: 0, image: modelXWhite },
+      { name: "Solid Black", hex: "#0A0A0A", price: 1500, image: modelXBlack },
+      { name: "Midnight Silver", hex: "#5A5E62", price: 1500, image: modelXSilver },
+      { name: "Deep Blue", hex: "#1A2C56", price: 1500, image: modelXBlue },
     ],
     wheels: [
       { name: '20" Cyberstream', price: 0 },
@@ -103,12 +124,12 @@ export const vehicles: Vehicle[] = [
     range: "330 mi",
     acceleration: "3.5 s 0–60",
     topSpeed: "155 mph",
-    image: modelY,
+    image: modelYWhite,
     colors: [
-      { name: "Pearl White", hex: "#F4F4F4", price: 0 },
-      { name: "Solid Black", hex: "#0A0A0A", price: 1000 },
-      { name: "Stealth Grey", hex: "#3A3D40", price: 1000 },
-      { name: "Deep Blue", hex: "#1A2C56", price: 1000 },
+      { name: "Pearl White", hex: "#F4F4F4", price: 0, image: modelYWhite },
+      { name: "Solid Black", hex: "#0A0A0A", price: 1000, image: modelYBlack },
+      { name: "Stealth Grey", hex: "#3A3D40", price: 1000, image: modelYGrey },
+      { name: "Deep Blue", hex: "#1A2C56", price: 1000, image: modelYBlue },
     ],
     wheels: [
       { name: '19" Gemini', price: 0 },
@@ -127,10 +148,10 @@ export const vehicles: Vehicle[] = [
     range: "340 mi",
     acceleration: "2.6 s 0–60",
     topSpeed: "130 mph",
-    image: cybertruck,
+    image: cybertruckStainless,
     colors: [
-      { name: "Stainless", hex: "#C7CBD1", price: 0 },
-      { name: "Wrap Black", hex: "#0A0A0A", price: 6500 },
+      { name: "Stainless", hex: "#C7CBD1", price: 0, image: cybertruckStainless },
+      { name: "Wrap Black", hex: "#0A0A0A", price: 6500, image: cybertruckBlack },
     ],
     wheels: [
       { name: '20" All-Terrain', price: 0 },
