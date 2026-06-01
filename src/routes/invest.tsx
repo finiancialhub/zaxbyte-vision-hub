@@ -15,9 +15,16 @@ export const Route = createFileRoute("/invest")({
 });
 
 function InvestPage() {
+  const stats = [
+    { k: `${entities.length}`, v: "Ventures" },
+    { k: "$250", v: "Min. Entry" },
+    { k: "34%", v: "Premium ROI" },
+    { k: "BTC · ETH · SOL", v: "Funding Rails" },
+  ];
+
   return (
     <div className="mx-auto max-w-[1600px] px-6 py-16 lg:px-12 lg:py-24">
-      <div className="mb-16 max-w-3xl">
+      <div className="mb-12 max-w-3xl animate-fade-up">
         <div className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">
           The Musk Portfolio
         </div>
@@ -29,14 +36,30 @@ function InvestPage() {
         </p>
       </div>
 
+      {/* Trust strip */}
+      <div className="mb-16 grid gap-6 border-y border-border py-8 sm:grid-cols-2 md:grid-cols-4">
+        {stats.map((s) => (
+          <div key={s.v}>
+            <div className="text-2xl font-medium md:text-3xl">{s.k}</div>
+            <div className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">{s.v}</div>
+          </div>
+        ))}
+      </div>
+
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {entities.map((e) => (
+        {entities.map((e, i) => (
           <div
             key={e.slug}
-            className="group flex flex-col rounded-2xl border border-border bg-card p-6 transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-elevated)]"
+            style={{ animationDelay: `${i * 40}ms` }}
+            className="group relative flex animate-fade-up flex-col overflow-hidden rounded-2xl border border-border bg-card p-6 transition-all duration-500 hover:-translate-y-1 hover:shadow-[var(--shadow-elevated)]"
           >
             <div
-              className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl text-base font-semibold tracking-tight text-white"
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 top-0 h-[2px] origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100"
+              style={{ backgroundColor: e.accent }}
+            />
+            <div
+              className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl text-base font-semibold tracking-tight text-white transition-transform duration-500 group-hover:scale-110"
               style={{ backgroundColor: e.accent }}
             >
               {e.initials}
@@ -64,7 +87,7 @@ function InvestPage() {
               className="mt-6 inline-flex items-center justify-between rounded-full bg-foreground px-5 py-2.5 text-xs font-semibold uppercase tracking-widest text-background transition-opacity hover:opacity-90"
             >
               Invest Now
-              <ArrowUpRight className="h-4 w-4" />
+              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Link>
           </div>
         ))}

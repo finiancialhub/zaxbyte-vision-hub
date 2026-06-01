@@ -156,6 +156,26 @@ function CheckoutPage() {
 
       {/* Wallets */}
       <section className="mx-auto max-w-[1400px] px-6 py-12 lg:px-12">
+        <div className="mb-8 flex flex-col gap-4 rounded-2xl border border-border bg-secondary p-6 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <div className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              Your selection
+            </div>
+            <div className="mt-1 text-lg font-medium">
+              {entity.name} · {entity.plans[planIdx].name}
+            </div>
+            <div className="text-sm text-muted-foreground">
+              Min {currency(entity.plans[planIdx].minimum)} · {entity.plans[planIdx].roi} · {entity.plans[planIdx].term}
+            </div>
+          </div>
+          <div
+            className="rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white"
+            style={{ backgroundColor: entity.accent }}
+          >
+            Ready to fund
+          </div>
+        </div>
+
         <h2 className="text-3xl">Funding wallets.</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           Send only the matching asset to each address. Sending the wrong asset may result in loss of funds.

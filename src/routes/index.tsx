@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import { ArrowRight } from "lucide-react";
 import heroCar from "@/assets/hero-car.jpg";
-import modelS from "@/assets/model-s-pearl-white.jpg";
+import modelS from "@/assets/home-model-s.jpg";
 import cybertruck from "@/assets/cybertruck-stainless.jpg";
 
 export const Route = createFileRoute("/")({
