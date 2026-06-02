@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
-import { Check, Copy, Upload, ArrowLeft } from "lucide-react";
-import { getEntity, wallets, type InvestmentPlan } from "@/lib/data";
+import { Check, Copy, Upload, ArrowLeft, ShieldCheck, X } from "lucide-react";
+import { getEntity, wallets, cryptoRails, type InvestmentPlan } from "@/lib/data";
 
 export const Route = createFileRoute("/invest/$slug")({
   loader: ({ params }) => {
