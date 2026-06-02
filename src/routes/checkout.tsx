@@ -138,7 +138,7 @@ function CheckoutPage() {
   );
 }
 
-function PaymentPanel({ total }: { total: number }) {
+function PaymentPanel({ total, down }: { total: number; down: number }) {
   const [active, setActive] = useState<(typeof cryptoRails)[number]["key"]>("BTC");
   const [copied, setCopied] = useState(false);
   const [open, setOpen] = useState(false);
@@ -158,6 +158,20 @@ function PaymentPanel({ total }: { total: number }) {
       <p className="mt-2 text-sm text-muted-foreground">
         Choose your rail and send the equivalent of the total. Use only the matching asset.
       </p>
+
+      {/* Down payment callout */}
+      <div className="mt-5 rounded-xl border border-border bg-secondary p-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Down payment to wallet</div>
+            <div className="mt-1 text-2xl font-medium">{currency(down)}</div>
+          </div>
+          <div className="text-right">
+            <div className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Remaining</div>
+            <div className="mt-1 text-sm font-medium text-muted-foreground">{currency(Math.max(total - down, 0))}</div>
+          </div>
+        </div>
+      </div>
 
       {/* Tabs */}
       <div className="mt-6 inline-flex rounded-full border border-border bg-secondary p-1">
