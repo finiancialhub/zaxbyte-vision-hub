@@ -131,7 +131,7 @@ function CheckoutPage() {
 
         {/* Payment */}
         <div>
-          <PaymentPanel total={total} />
+          <PaymentPanel total={total} down={search.down} />
         </div>
       </div>
     </div>
