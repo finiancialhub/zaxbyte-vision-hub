@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { vehicles, type Vehicle } from "@/lib/data";
 
@@ -188,9 +188,21 @@ function Configurator({ vehicle }: { vehicle: Vehicle }) {
           </div>
         </div>
 
-        <button className="mt-6 w-full rounded-full bg-foreground py-3.5 text-sm font-semibold uppercase tracking-widest text-background transition-opacity hover:opacity-90">
+        <Link
+          to="/checkout"
+          search={{
+            slug: vehicle.slug,
+            color,
+            wheel,
+            interior,
+            down,
+            term,
+            apr,
+          }}
+          className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-foreground py-3.5 text-sm font-semibold uppercase tracking-widest text-background transition-opacity hover:opacity-90"
+        >
           Order Now
-        </button>
+        </Link>
       </div>
     </div>
   );
