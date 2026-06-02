@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VehiclesRouteImport } from './routes/vehicles'
 import { Route as InvestRouteImport } from './routes/invest'
+import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as InvestSlugRouteImport } from './routes/invest.$slug'
 
@@ -22,6 +23,11 @@ const VehiclesRoute = VehiclesRouteImport.update({
 const InvestRoute = InvestRouteImport.update({
   id: '/invest',
   path: '/invest',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -37,12 +43,14 @@ const InvestSlugRoute = InvestSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/checkout': typeof CheckoutRoute
   '/invest': typeof InvestRouteWithChildren
   '/vehicles': typeof VehiclesRoute
   '/invest/$slug': typeof InvestSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/checkout': typeof CheckoutRoute
   '/invest': typeof InvestRouteWithChildren
   '/vehicles': typeof VehiclesRoute
   '/invest/$slug': typeof InvestSlugRoute
@@ -50,20 +58,22 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/checkout': typeof CheckoutRoute
   '/invest': typeof InvestRouteWithChildren
   '/vehicles': typeof VehiclesRoute
   '/invest/$slug': typeof InvestSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/invest' | '/vehicles' | '/invest/$slug'
+  fullPaths: '/' | '/checkout' | '/invest' | '/vehicles' | '/invest/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/invest' | '/vehicles' | '/invest/$slug'
-  id: '__root__' | '/' | '/invest' | '/vehicles' | '/invest/$slug'
+  to: '/' | '/checkout' | '/invest' | '/vehicles' | '/invest/$slug'
+  id: '__root__' | '/' | '/checkout' | '/invest' | '/vehicles' | '/invest/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CheckoutRoute: typeof CheckoutRoute
   InvestRoute: typeof InvestRouteWithChildren
   VehiclesRoute: typeof VehiclesRoute
 }
@@ -82,6 +92,13 @@ declare module '@tanstack/react-router' {
       path: '/invest'
       fullPath: '/invest'
       preLoaderRoute: typeof InvestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -114,6 +131,7 @@ const InvestRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CheckoutRoute: CheckoutRoute,
   InvestRoute: InvestRouteWithChildren,
   VehiclesRoute: VehiclesRoute,
 }

@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
-import { Check, Copy, Upload, ArrowLeft } from "lucide-react";
-import { getEntity, wallets, type InvestmentPlan } from "@/lib/data";
+import { Check, Copy, Upload, ArrowLeft, ShieldCheck, X } from "lucide-react";
+import { getEntity, wallets, cryptoRails, type InvestmentPlan } from "@/lib/data";
 
 export const Route = createFileRoute("/invest/$slug")({
   loader: ({ params }) => {
@@ -28,28 +28,6 @@ function currency(n: number) {
   return n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
 }
 
-function WalletRow({ label, address }: { label: string; address: string }) {
-  const [copied, setCopied] = useState(false);
-  return (
-    <div className="flex flex-col gap-3 rounded-xl border border-border bg-secondary p-4 sm:flex-row sm:items-center sm:justify-between">
-      <div className="min-w-0">
-        <div className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">{label}</div>
-        <div className="mt-1 truncate font-mono text-sm">{address}</div>
-      </div>
-      <button
-        onClick={() => {
-          navigator.clipboard.writeText(address);
-          setCopied(true);
-          setTimeout(() => setCopied(false), 1500);
-        }}
-        className="inline-flex shrink-0 items-center gap-2 rounded-full border border-foreground/20 px-4 py-2 text-xs font-semibold uppercase tracking-widest transition-colors hover:bg-foreground hover:text-background"
-      >
-        {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-        {copied ? "Copied" : "Copy"}
-      </button>
-    </div>
-  );
-}
 
 function CheckoutPage() {
   const { entity } = Route.useLoaderData();
@@ -178,51 +156,200 @@ function CheckoutPage() {
 
         <h2 className="text-3xl">Funding wallets.</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          Send only the matching asset to each address. Sending the wrong asset may result in loss of funds.
+          Select your rail. Send only the matching asset to the displayed address.
         </p>
-        <div className="mt-6 grid gap-3">
-          <WalletRow label="Bitcoin (BTC)" address={wallets.BTC} />
-          <WalletRow label="Ethereum (ETH)" address={wallets.ETH} />
-          <WalletRow label="Solana (SOL)" address={wallets.SOL} />
-        </div>
+
+        <CryptoPanel />
       </section>
 
-      {/* Proof */}
-      <section className="mx-auto max-w-[1400px] px-6 pb-24 pt-12 lg:px-12">
+      {/* Verify */}
+      <section className="mx-auto max-w-[1400px] px-6 pb-24 pt-6 lg:px-12">
         <div className="rounded-3xl bg-foreground p-8 text-background md:p-14">
           <p className="text-xl font-semibold md:text-2xl">
             Once you've made your transaction, click the button below to send proof of
             payment to enable your investment plan.
           </p>
-          <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
-            <label className="inline-flex cursor-pointer items-center gap-3 rounded-full bg-background px-6 py-3.5 text-sm font-semibold uppercase tracking-widest text-foreground transition-opacity hover:opacity-90">
-              <Upload className="h-4 w-4" />
-              {file ? "Replace file" : "Choose proof file"}
-              <input
-                type="file"
-                accept="image/*,application/pdf"
-                className="hidden"
-                onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-              />
-            </label>
-            <button
-              disabled={!file}
-              onClick={() => setSubmitted(true)}
-              className="rounded-full border border-background/30 px-6 py-3.5 text-sm font-semibold uppercase tracking-widest transition-colors disabled:opacity-40 enabled:hover:bg-background enabled:hover:text-foreground"
-            >
-              Submit Proof of Payment
-            </button>
-            {file && (
-              <div className="text-sm text-background/70">Attached: {file.name}</div>
-            )}
-          </div>
+          <button
+            onClick={() => setSubmitted(true)}
+            className="mt-8 inline-flex items-center justify-center gap-2 rounded-full px-8 py-3.5 text-sm font-semibold uppercase tracking-widest text-white transition-opacity hover:opacity-90"
+            style={{ backgroundColor: "var(--success)" }}
+          >
+            <ShieldCheck className="h-4 w-4" />
+            Verify Payment
+          </button>
+
           {submitted && (
-            <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-background/10 px-4 py-2 text-sm">
-              <Check className="h-4 w-4" /> Proof received. Our team will verify within 12 hours.
-            </div>
+            <VerifyModal
+              entityName={entity.name}
+              planName={entity.plans[planIdx].name}
+              minimum={entity.plans[planIdx].minimum}
+              onClose={() => {
+                setSubmitted(false);
+                setFile(null);
+              }}
+              file={file}
+              setFile={setFile}
+            />
           )}
         </div>
       </section>
+    </div>
+  );
+}
+
+function CryptoPanel() {
+  const [active, setActive] = useState<(typeof cryptoRails)[number]["key"]>("BTC");
+  const [copied, setCopied] = useState(false);
+  const address = wallets[active];
+
+  return (
+    <div className="mt-6">
+      <div className="inline-flex rounded-full border border-border bg-secondary p-1">
+        {cryptoRails.map((c) => (
+          <button
+            key={c.key}
+            onClick={() => setActive(c.key)}
+            className={`rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-widest transition-colors ${
+              active === c.key ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {c.ticker}
+          </button>
+        ))}
+      </div>
+
+      <div className="mt-4 flex flex-col gap-3 rounded-xl border border-border bg-secondary p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <div className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            {cryptoRails.find((c) => c.key === active)!.label} ({active}) wallet
+          </div>
+          <div className="mt-1 truncate font-mono text-sm">{address}</div>
+        </div>
+        <button
+          onClick={() => {
+            navigator.clipboard.writeText(address);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 1500);
+          }}
+          aria-label="Copy address"
+          className="inline-flex shrink-0 items-center gap-2 rounded-full border border-foreground/20 px-4 py-2 text-xs font-semibold uppercase tracking-widest transition-colors hover:bg-foreground hover:text-background"
+        >
+          {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+          {copied ? "Copied" : "Copy Address"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function VerifyModal({
+  entityName,
+  planName,
+  minimum,
+  onClose,
+  file,
+  setFile,
+}: {
+  entityName: string;
+  planName: string;
+  minimum: number;
+  onClose: () => void;
+  file: File | null;
+  setFile: (f: File | null) => void;
+}) {
+  const [done, setDone] = useState(false);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4 animate-fade-up"
+      onClick={onClose}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-lg rounded-2xl bg-background p-8 text-foreground shadow-[var(--shadow-elevated)]"
+      >
+        <button
+          onClick={onClose}
+          aria-label="Close"
+          className="absolute right-4 top-4 rounded-full p-1.5 text-muted-foreground hover:bg-secondary hover:text-foreground"
+        >
+          <X className="h-4 w-4" />
+        </button>
+
+        {!done ? (
+          <>
+            <div className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              {entityName} · {planName} · {currency(minimum)}+
+            </div>
+            <h3 className="mt-1 text-2xl">Submit your transaction.</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Provide your details and upload the on-chain receipt so we can activate your plan.
+            </p>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                setDone(true);
+              }}
+              className="mt-6 space-y-4"
+            >
+              <div className="grid gap-3 sm:grid-cols-2">
+                <label className="block text-sm">
+                  <span className="text-muted-foreground">Full name</span>
+                  <input required className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" />
+                </label>
+                <label className="block text-sm">
+                  <span className="text-muted-foreground">Email</span>
+                  <input required type="email" className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" />
+                </label>
+              </div>
+              <label className="block text-sm">
+                <span className="text-muted-foreground">Transaction hash</span>
+                <input className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 font-mono text-xs" />
+              </label>
+              <label className="inline-flex cursor-pointer items-center gap-3 rounded-full border border-border px-5 py-2.5 text-xs font-semibold uppercase tracking-widest transition-colors hover:bg-secondary">
+                <Upload className="h-4 w-4" />
+                {file ? "Replace receipt" : "Upload receipt"}
+                <input
+                  type="file"
+                  accept="image/*,application/pdf"
+                  className="hidden"
+                  onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+                />
+              </label>
+              {file && <div className="text-xs text-muted-foreground">Attached: {file.name}</div>}
+
+              <button
+                type="submit"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold uppercase tracking-widest text-white transition-opacity hover:opacity-90"
+                style={{ backgroundColor: "var(--success)" }}
+              >
+                <ShieldCheck className="h-4 w-4" />
+                Submit for Verification
+              </button>
+            </form>
+          </>
+        ) : (
+          <div className="py-6 text-center">
+            <div
+              className="mx-auto flex h-14 w-14 items-center justify-center rounded-full"
+              style={{ backgroundColor: "var(--success)" }}
+            >
+              <Check className="h-7 w-7 text-white" />
+            </div>
+            <h3 className="mt-5 text-2xl">Proof received.</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Our desk will verify the transaction and activate your {planName} plan within 12 hours.
+            </p>
+            <button
+              onClick={onClose}
+              className="mt-6 rounded-full bg-foreground px-6 py-2.5 text-xs font-semibold uppercase tracking-widest text-background"
+            >
+              Close
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

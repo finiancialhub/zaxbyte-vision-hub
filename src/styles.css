@@ -49,6 +49,10 @@
   --muted-foreground: oklch(0.50 0.01 260);
   --accent: oklch(0.62 0.21 27);
   --accent-foreground: oklch(1 0 0);
+  --success: oklch(0.62 0.17 152);
+  --success-foreground: oklch(1 0 0);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
   --border: oklch(0.92 0.005 260);
