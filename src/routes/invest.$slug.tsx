@@ -28,28 +28,6 @@ function currency(n: number) {
   return n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
 }
 
-function WalletRow({ label, address }: { label: string; address: string }) {
-  const [copied, setCopied] = useState(false);
-  return (
-    <div className="flex flex-col gap-3 rounded-xl border border-border bg-secondary p-4 sm:flex-row sm:items-center sm:justify-between">
-      <div className="min-w-0">
-        <div className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">{label}</div>
-        <div className="mt-1 truncate font-mono text-sm">{address}</div>
-      </div>
-      <button
-        onClick={() => {
-          navigator.clipboard.writeText(address);
-          setCopied(true);
-          setTimeout(() => setCopied(false), 1500);
-        }}
-        className="inline-flex shrink-0 items-center gap-2 rounded-full border border-foreground/20 px-4 py-2 text-xs font-semibold uppercase tracking-widest transition-colors hover:bg-foreground hover:text-background"
-      >
-        {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-        {copied ? "Copied" : "Copy"}
-      </button>
-    </div>
-  );
-}
 
 function CheckoutPage() {
   const { entity } = Route.useLoaderData();
