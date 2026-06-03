@@ -10,19 +10,14 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VehiclesRouteImport } from './routes/vehicles'
-import { Route as InvestRouteImport } from './routes/invest'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as InvestIndexRouteImport } from './routes/invest.index'
 import { Route as InvestSlugRouteImport } from './routes/invest.$slug'
 
 const VehiclesRoute = VehiclesRouteImport.update({
   id: '/vehicles',
   path: '/vehicles',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const InvestRoute = InvestRouteImport.update({
-  id: '/invest',
-  path: '/invest',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckoutRoute = CheckoutRouteImport.update({
@@ -35,47 +30,59 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InvestIndexRoute = InvestIndexRouteImport.update({
+  id: '/invest/',
+  path: '/invest/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InvestSlugRoute = InvestSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => InvestRoute,
+  id: '/invest/$slug',
+  path: '/invest/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/checkout': typeof CheckoutRoute
-  '/invest': typeof InvestRouteWithChildren
   '/vehicles': typeof VehiclesRoute
   '/invest/$slug': typeof InvestSlugRoute
+  '/invest/': typeof InvestIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/checkout': typeof CheckoutRoute
-  '/invest': typeof InvestRouteWithChildren
   '/vehicles': typeof VehiclesRoute
   '/invest/$slug': typeof InvestSlugRoute
+  '/invest': typeof InvestIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/checkout': typeof CheckoutRoute
-  '/invest': typeof InvestRouteWithChildren
   '/vehicles': typeof VehiclesRoute
   '/invest/$slug': typeof InvestSlugRoute
+  '/invest/': typeof InvestIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/checkout' | '/invest' | '/vehicles' | '/invest/$slug'
+  fullPaths: '/' | '/checkout' | '/vehicles' | '/invest/$slug' | '/invest/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/checkout' | '/invest' | '/vehicles' | '/invest/$slug'
-  id: '__root__' | '/' | '/checkout' | '/invest' | '/vehicles' | '/invest/$slug'
+  to: '/' | '/checkout' | '/vehicles' | '/invest/$slug' | '/invest'
+  id:
+    | '__root__'
+    | '/'
+    | '/checkout'
+    | '/vehicles'
+    | '/invest/$slug'
+    | '/invest/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CheckoutRoute: typeof CheckoutRoute
-  InvestRoute: typeof InvestRouteWithChildren
   VehiclesRoute: typeof VehiclesRoute
+  InvestSlugRoute: typeof InvestSlugRoute
+  InvestIndexRoute: typeof InvestIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -85,13 +92,6 @@ declare module '@tanstack/react-router' {
       path: '/vehicles'
       fullPath: '/vehicles'
       preLoaderRoute: typeof VehiclesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/invest': {
-      id: '/invest'
-      path: '/invest'
-      fullPath: '/invest'
-      preLoaderRoute: typeof InvestRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkout': {
@@ -108,33 +108,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/invest/': {
+      id: '/invest/'
+      path: '/invest'
+      fullPath: '/invest/'
+      preLoaderRoute: typeof InvestIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/invest/$slug': {
       id: '/invest/$slug'
-      path: '/$slug'
+      path: '/invest/$slug'
       fullPath: '/invest/$slug'
       preLoaderRoute: typeof InvestSlugRouteImport
-      parentRoute: typeof InvestRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
 
-interface InvestRouteChildren {
-  InvestSlugRoute: typeof InvestSlugRoute
-}
-
-const InvestRouteChildren: InvestRouteChildren = {
-  InvestSlugRoute: InvestSlugRoute,
-}
-
-const InvestRouteWithChildren =
-  InvestRoute._addFileChildren(InvestRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CheckoutRoute: CheckoutRoute,
-  InvestRoute: InvestRouteWithChildren,
   VehiclesRoute: VehiclesRoute,
+  InvestSlugRoute: InvestSlugRoute,
+  InvestIndexRoute: InvestIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
