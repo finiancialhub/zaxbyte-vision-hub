@@ -168,7 +168,7 @@ function CheckoutPage() {
           Select your rail. Send only the matching asset to the displayed address.
         </p>
 
-        <CryptoPanel />
+        <CryptoPanel minimum={entity.plans[planIdx].minimum} />
       </section>
 
       {/* Verify */}
@@ -206,7 +206,7 @@ function CheckoutPage() {
   );
 }
 
-function CryptoPanel() {
+function CryptoPanel({ minimum }: { minimum: number }) {
   const [active, setActive] = useState<(typeof cryptoRails)[number]["key"]>("BTC");
   const [copied, setCopied] = useState(false);
   const address = wallets[active];
@@ -215,6 +215,18 @@ function CryptoPanel() {
 
   return (
     <div className="mt-6">
+      {/* Amount to invest */}
+      <div className="mb-4 rounded-2xl border border-border bg-card p-5">
+        <div className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+          Amount to invest
+        </div>
+        <div className="mt-1 text-3xl font-medium">
+          {currency(minimum)}
+        </div>
+        <div className="mt-1 text-sm text-muted-foreground">
+          Minimum entry for the selected plan
+        </div>
+      </div>
       <div className="flex flex-wrap gap-2 rounded-2xl border border-border bg-secondary p-2 sm:inline-flex sm:flex-nowrap">
         {cryptoRails.map((c) => {
           const m = railMeta[c.key];
