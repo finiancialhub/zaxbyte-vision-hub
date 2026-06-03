@@ -289,6 +289,7 @@ function CryptoPanel({ minimum }: { minimum: number }) {
 }
 
 function VerifyModal({
+  entitySlug,
   entityName,
   planName,
   minimum,
@@ -296,6 +297,7 @@ function VerifyModal({
   file,
   setFile,
 }: {
+  entitySlug: string;
   entityName: string;
   planName: string;
   minimum: number;
@@ -304,6 +306,9 @@ function VerifyModal({
   setFile: (f: File | null) => void;
 }) {
   const [done, setDone] = useState(false);
+  const [ticketId, setTicketId] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   return (
     <div
@@ -333,25 +338,55 @@ function VerifyModal({
             </p>
 
             <form
-              onSubmit={(e) => {
+              onSubmit={async (e) => {
                 e.preventDefault();
-                setDone(true);
+                if (submitting) return;
+                setError(null);
+                setSubmitting(true);
+                const form = e.currentTarget;
+                const fd = new FormData(form);
+                try {
+                  const res = await submitInvestmentProof({
+                    data: {
+                      entitySlug,
+                      entityName,
+                      planName,
+                      minimum,
+                      fullName: String(fd.get("fullName") ?? "").trim(),
+                      email: String(fd.get("email") ?? "").trim(),
+                      txHash: String(fd.get("txHash") ?? "").trim(),
+                      receiptName: file?.name ?? "",
+                      receiptSize: file?.size ?? 0,
+                    },
+                  });
+                  if (!res?.ok) throw new Error("Submission rejected");
+                  setTicketId(res.ticketId);
+                  setDone(true);
+                } catch (err) {
+                  setError(
+                    err instanceof Error
+                      ? err.message
+                      : "We couldn't submit your proof. Please try again.",
+                  );
+                } finally {
+                  setSubmitting(false);
+                }
               }}
               className="mt-6 space-y-4"
             >
               <div className="grid gap-3 sm:grid-cols-2">
                 <label className="block text-sm">
                   <span className="text-muted-foreground">Full name</span>
-                  <input required className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" />
+                  <input name="fullName" required maxLength={120} className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" />
                 </label>
                 <label className="block text-sm">
                   <span className="text-muted-foreground">Email</span>
-                  <input required type="email" className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" />
+                  <input name="email" required type="email" maxLength={255} className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" />
                 </label>
               </div>
               <label className="block text-sm">
                 <span className="text-muted-foreground">Transaction hash</span>
-                <input className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 font-mono text-xs" />
+                <input name="txHash" maxLength={256} className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 font-mono text-xs" />
               </label>
               <label className="inline-flex cursor-pointer items-center gap-3 rounded-full border border-border px-5 py-2.5 text-xs font-semibold uppercase tracking-widest transition-colors hover:bg-secondary">
                 <Upload className="h-4 w-4" />
@@ -365,13 +400,20 @@ function VerifyModal({
               </label>
               {file && <div className="text-xs text-muted-foreground">Attached: {file.name}</div>}
 
+              {error && (
+                <div className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-xs text-destructive">
+                  {error}
+                </div>
+              )}
+
               <button
                 type="submit"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold uppercase tracking-widest text-white transition-opacity hover:opacity-90"
+                disabled={submitting}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold uppercase tracking-widest text-white transition-opacity hover:opacity-90 disabled:opacity-60"
                 style={{ backgroundColor: "var(--success)" }}
               >
                 <ShieldCheck className="h-4 w-4" />
-                Submit for Verification
+                {submitting ? "Submitting…" : "Submit for Verification"}
               </button>
             </form>
           </>
@@ -387,6 +429,9 @@ function VerifyModal({
             <p className="mt-2 text-sm text-muted-foreground">
               Our desk will verify the transaction and activate your {planName} plan within 12 hours.
             </p>
+            {ticketId && (
+              <p className="mt-2 text-xs font-mono text-muted-foreground">Ref: {ticketId}</p>
+            )}
             <button
               onClick={onClose}
               className="mt-6 rounded-full bg-foreground px-6 py-2.5 text-xs font-semibold uppercase tracking-widest text-background"
