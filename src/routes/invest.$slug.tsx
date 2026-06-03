@@ -210,42 +210,65 @@ function CryptoPanel() {
   const [active, setActive] = useState<(typeof cryptoRails)[number]["key"]>("BTC");
   const [copied, setCopied] = useState(false);
   const address = wallets[active];
+  const meta = railMeta[active];
+  const activeRail = cryptoRails.find((c) => c.key === active)!;
 
   return (
     <div className="mt-6">
-      <div className="inline-flex rounded-full border border-border bg-secondary p-1">
-        {cryptoRails.map((c) => (
-          <button
-            key={c.key}
-            onClick={() => setActive(c.key)}
-            className={`rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-widest transition-colors ${
-              active === c.key ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            {c.ticker}
-          </button>
-        ))}
+      <div className="flex flex-wrap gap-2 rounded-2xl border border-border bg-secondary p-2 sm:inline-flex sm:flex-nowrap">
+        {cryptoRails.map((c) => {
+          const m = railMeta[c.key];
+          const isActive = active === c.key;
+          return (
+            <button
+              key={c.key}
+              onClick={() => setActive(c.key)}
+              className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-semibold uppercase tracking-widest transition-all duration-200 ${
+                isActive
+                  ? "bg-foreground text-background shadow"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <span
+                className="flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-bold"
+                style={{
+                  backgroundColor: isActive ? "rgba(255,255,255,0.12)" : m.color,
+                  color: isActive ? "#fff" : "#fff",
+                }}
+              >
+                {m.symbol}
+              </span>
+              {c.ticker}
+            </button>
+          );
+        })}
       </div>
 
-      <div className="mt-4 flex flex-col gap-3 rounded-xl border border-border bg-secondary p-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="min-w-0">
-          <div className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-            {cryptoRails.find((c) => c.key === active)!.label} ({active}) wallet
+      <div className="mt-4 rounded-2xl border border-border bg-secondary p-5">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
+            <div className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              {activeRail.label} ({active}) deposit address
+            </div>
+            <div className="mt-1.5 truncate font-mono text-sm">{address}</div>
           </div>
-          <div className="mt-1 truncate font-mono text-sm">{address}</div>
+          <button
+            onClick={() => {
+              navigator.clipboard.writeText(address);
+              setCopied(true);
+              setTimeout(() => setCopied(false), 1500);
+            }}
+            aria-label="Copy address"
+            className="inline-flex shrink-0 items-center gap-2 rounded-full border border-foreground/20 px-4 py-2 text-xs font-semibold uppercase tracking-widest transition-colors hover:bg-foreground hover:text-background"
+          >
+            {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+            {copied ? "Copied" : "Copy Address"}
+          </button>
         </div>
-        <button
-          onClick={() => {
-            navigator.clipboard.writeText(address);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 1500);
-          }}
-          aria-label="Copy address"
-          className="inline-flex shrink-0 items-center gap-2 rounded-full border border-foreground/20 px-4 py-2 text-xs font-semibold uppercase tracking-widest transition-colors hover:bg-foreground hover:text-background"
-        >
-          {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-          {copied ? "Copied" : "Copy Address"}
-        </button>
+        <p className="mt-4 border-t border-border pt-3 text-xs text-muted-foreground">
+          Send only {activeRail.label} ({active}) to this address via the {meta.network}.
+          Funds sent on any other network will be unrecoverable.
+        </p>
       </div>
     </div>
   );
