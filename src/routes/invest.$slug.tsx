@@ -29,6 +29,13 @@ function currency(n: number) {
 }
 
 
+const railMeta: Record<string, { symbol: string; network: string; color: string }> = {
+  BTC: { symbol: "₿", network: "Bitcoin (BTC) network", color: "#F7931A" },
+  ETH: { symbol: "Ξ", network: "Ethereum (ERC-20) network", color: "#627EEA" },
+  SOL: { symbol: "◎", network: "Solana (SPL) network", color: "#14F195" },
+  XRP: { symbol: "✕", network: "XRP Ledger (XRPL) network", color: "#23292F" },
+};
+
 function CheckoutPage() {
   const { entity } = Route.useLoaderData();
   const [planIdx, setPlanIdx] = useState(0);
