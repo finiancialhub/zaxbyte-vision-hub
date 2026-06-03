@@ -168,7 +168,7 @@ function CheckoutPage() {
           Select your rail. Send only the matching asset to the displayed address.
         </p>
 
-        <CryptoPanel />
+        <CryptoPanel minimum={entity.plans[planIdx].minimum} />
       </section>
 
       {/* Verify */}
