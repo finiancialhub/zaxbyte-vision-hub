@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { entities } from "@/lib/data";
 
-export const Route = createFileRoute("/invest")({
+export const Route = createFileRoute("/invest/")({
   head: () => ({
     meta: [
       { title: "Invest — The Musk Portfolio | Zaxbyte" },
