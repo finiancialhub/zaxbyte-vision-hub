@@ -190,6 +190,7 @@ function CheckoutPage() {
 
           {submitted && (
             <VerifyModal
+              entitySlug={entity.slug}
               entityName={entity.name}
               planName={entity.plans[planIdx].name}
               minimum={entity.plans[planIdx].minimum}
