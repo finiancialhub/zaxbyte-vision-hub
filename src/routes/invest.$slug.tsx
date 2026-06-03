@@ -86,8 +86,10 @@ function CheckoutPage() {
               <button
                 key={p.name}
                 onClick={() => setPlanIdx(i)}
-                className={`flex flex-col rounded-2xl border p-6 text-left transition-all ${
-                  selected ? "border-foreground bg-foreground text-background" : "border-border bg-card hover:border-foreground/40"
+                className={`group relative flex flex-col rounded-2xl border p-6 text-left transition-all duration-300 ${
+                  selected
+                    ? "border-foreground bg-foreground text-background shadow-[var(--shadow-elevated)] -translate-y-0.5"
+                    : "border-border bg-card hover:border-foreground/40 hover:-translate-y-0.5"
                 }`}
               >
                 <div className={`text-xs font-semibold uppercase tracking-widest ${selected ? "text-background/70" : "text-muted-foreground"}`}>
